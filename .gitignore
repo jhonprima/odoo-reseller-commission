@@ -1,0 +1,12 @@
+# Abaikan folder inti Odoo dan Environment
+odoo/
+venv-odoo/
+venv/
+
+# Abaikan file sampah Python
+**/__pycache__/
+*.pyc
+
+# Abaikan konfigurasi lokal agar rahasia DB aman
+odoo.conf
+*.log

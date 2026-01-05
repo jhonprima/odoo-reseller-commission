@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_inherit_reseller" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.reseller</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_create_commission_invoice" 
+                        string="Create Commission Invoice" 
+                        type="object" 
+                        class="oe_highlight" 
+                        invisible="not is_agent_sale or commission_status != 'draft' or state != 'sale'"/>
+            </xpath>
+
+            <xpath expr="//field[@name='payment_term_id']" position="after">
+                <field name="is_agent_sale"/>
+                <field name="principal_id" invisible="not is_agent_sale" required="is_agent_sale"/>
+            </xpath>
+
+            <xpath expr="//notebook" position="inside">
+              <page string="Reseller Commission" name="commission_tab" invisible="not is_agent_sale">
+    <group>
+        <field name="commission_rate" force_save="1"/>
+        <field name="commission_amount" force_save="1"/>
+        <field name="commission_status" widget="badge" decoration-info="commission_status == 'invoiced'"/>
+    </group>
+</page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
