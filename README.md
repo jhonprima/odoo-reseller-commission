@@ -1,37 +1,89 @@
-# Odoo
+Odoo 18 – Reseller Commission Module (PSAK 72 Compliant)
+1. Business Case & Background
 
-[![Build Status](https://runbot.odoo.com/runbot/badge/flat/1/master.svg)](https://runbot.odoo.com/runbot)
-[![Tech Doc](https://img.shields.io/badge/master-docs-875A7B.svg?style=flat&colorA=8F8F8F)](https://www.odoo.com/documentation/master)
-[![Help](https://img.shields.io/badge/master-help-875A7B.svg?style=flat&colorA=8F8F8F)](https://www.odoo.com/forum/help-1)
-[![Nightly Builds](https://img.shields.io/badge/master-nightly-875A7B.svg?style=flat&colorA=8F8F8F)](https://nightly.odoo.com/)
+Modul ini dikembangkan untuk menangani skema bisnis keagenan (reseller/agent) antara:
 
-Odoo is a suite of web based open source business apps.
+PT A → Agen / Perusahaan Pengguna Odoo
 
-The main Odoo Apps include an [Open Source CRM](https://www.odoo.com/page/crm),
-[Website Builder](https://www.odoo.com/app/website),
-[eCommerce](https://www.odoo.com/app/ecommerce),
-[Warehouse Management](https://www.odoo.com/app/inventory),
-[Project Management](https://www.odoo.com/app/project),
-[Billing &amp; Accounting](https://www.odoo.com/app/accounting),
-[Point of Sale](https://www.odoo.com/app/point-of-sale-shop),
-[Human Resources](https://www.odoo.com/app/employees),
-[Marketing](https://www.odoo.com/app/social-marketing),
-[Manufacturing](https://www.odoo.com/app/manufacturing),
-[...](https://www.odoo.com/)
+PT B → Principal / Vendor
 
-Odoo Apps can be used as stand-alone applications, but they also integrate seamlessly so you get
-a full-featured [Open Source ERP](https://www.odoo.com) when you install several Apps.
+Sesuai dengan standar akuntansi PSAK 72 – Pendapatan dari Kontrak dengan Pelanggan, PT A bertindak sebagai agen, bukan sebagai principal. PT A tidak menanggung risiko persediaan dan tidak mengendalikan barang yang dijual.
 
-## Getting started with Odoo
+Oleh karena itu, pendapatan yang diakui oleh PT A hanya sebesar komisi jasa yang diperoleh dari PT B, bukan nilai bruto penjualan barang. Modul ini dirancang untuk memastikan proses bisnis dan pencatatan akuntansi patuh terhadap PSAK 72.
 
-For a standard installation please follow the [Setup instructions](https://www.odoo.com/documentation/master/administration/install/install.html)
-from the documentation.
+2. Fitur Utama
+🔹 Konfigurasi Partner Agen
 
-To learn the software, we recommend the [Odoo eLearning](https://www.odoo.com/slides),
-or [Scale-up, the business game](https://www.odoo.com/page/scale-up-business-game).
-Developers can start with [the developer tutorials](https://www.odoo.com/documentation/master/developer/howtos.html).
+Penambahan flag Is Principal pada model res.partner
 
-## Security
+Pengaturan Commission Rate (%) per Principal
 
-If you believe you have found a security issue, check our [Responsible Disclosure page](https://www.odoo.com/security-report)
-for details and get in touch with us via email.
+Fleksibel untuk multi-principal
+
+🔹 Otomatisasi Sales Order
+
+Identifikasi otomatis transaksi Reseller Agent Sale
+
+Perhitungan nilai komisi secara otomatis menggunakan computed field
+
+Komisi dihitung berdasarkan nilai Sales Order sesuai konfigurasi partner
+
+🔹 Integrasi Akuntansi (Accounting Integration)
+
+Pembuatan Commission Invoice otomatis ke Principal (PT B) setelah Sales Order dikonfirmasi
+
+Faktur hanya mencatat nilai komisi jasa
+
+Mendukung prinsip Net Revenue Recognition (PSAK 72)
+
+🔹 Pelaporan (Reporting)
+
+Dashboard analitik berbasis Pivot View
+
+Visualisasi performa komisi menggunakan Graph View
+
+Monitoring pendapatan komisi secara real-time
+
+3. Spesifikasi Teknis
+Komponen	Detail
+Versi Odoo	18.0 (Community / Enterprise)
+Bahasa	Python 3.10+
+Standar Kode	PEP 8
+Framework	Odoo ORM
+Testing	Functional & Unit Test
+4. Struktur Modul
+
+Modul ini mengikuti arsitektur standar Odoo untuk kemudahan pengembangan dan pemeliharaan:
+
+reseller_commission/
+├── models/
+│   ├── sale_order.py
+│   └── res_partner.py
+├── views/
+│   ├── sale_order_view.xml
+│   ├── res_partner_view.xml
+│   └── commission_report_view.xml
+├── security/
+│   └── ir.model.access.csv
+├── tests/
+│   └── test_reseller_commission.py
+├── __manifest__.py
+└── README.md
+
+5. Pengujian (Unit Test)
+
+Modul ini memenuhi persyaratan mandatory testing dengan minimum code coverage 80%.
+
+Menjalankan Unit Test via CLI
+python odoo-bin -c odoo.conf -d odoo \
+-u reseller_commission \
+--test-enable \
+--stop-after-init \
+--log-level=test
+
+6. Compliance Note (PSAK 72)
+
+✔ Pendapatan diakui hanya sebesar komisi
+✔ Tidak mencatat nilai penjualan bruto
+✔ Sesuai model Agent vs Principal
+✔ Aman untuk audit keuangan
